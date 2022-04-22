@@ -19,20 +19,18 @@ var app = builder.Build();
 seedData();
 void seedData()
 {
-    IServiceScopeFactory? scopedFactory = app.Services.GetService<IServiceScopeFactory>();
-    using (IServiceScope? scope = scopedFactory.CreateScope())
+    IServiceScopeFactory scopedFactory = app.Services.GetService<IServiceScopeFactory>();
+    using (IServiceScope scope = scopedFactory.CreateScope())
     {
-        SeedDb? service = scope.ServiceProvider.GetService<SeedDb>();
+        SeedDb service = scope.ServiceProvider.GetService<SeedDb>();
         service.SeedAsync().Wait();
     }
 }
 
 
-    // Configure the HTTP request pipeline.
     if (!app.Environment.IsDevelopment())
     {
         app.UseExceptionHandler("/Home/Error");
-        // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
         app.UseHsts();
     }
 

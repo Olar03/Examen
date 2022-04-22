@@ -19,8 +19,8 @@ namespace Examen.Data
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Entrance>().HasIndex(e => e.Id).IsUnique();
             modelBuilder.Entity<Entrance>().HasIndex(t => t.Id).IsUnique();
-            modelBuilder.Entity<Ticket>().HasIndex(t => t.Id).IsUnique();
 
         }
 

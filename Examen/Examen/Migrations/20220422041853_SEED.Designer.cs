@@ -4,6 +4,7 @@ using Examen.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Examen.Migrations
 {
     [DbContext(typeof(ExamenContext))]
-    partial class ExamenContextModelSnapshot : ModelSnapshot
+    [Migration("20220422041853_SEED")]
+    partial class SEED
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -56,13 +58,15 @@ namespace Examen.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Document")
+                        .IsRequired()
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("EntranceId")
+                    b.Property<int?>("EntranceId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasMaxLength(50)
                         .HasColumnType("nvarchar(50)");
 
@@ -79,11 +83,11 @@ namespace Examen.Migrations
 
             modelBuilder.Entity("Examen.Data.Entities.Ticket", b =>
                 {
-                    b.HasOne("Examen.Data.Entities.Entrance", null)
+                    b.HasOne("Examen.Data.Entities.Entrance", "Entrance")
                         .WithMany("Tickets")
-                        .HasForeignKey("EntranceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EntranceId");
+
+                    b.Navigation("Entrance");
                 });
 
             modelBuilder.Entity("Examen.Data.Entities.Entrance", b =>

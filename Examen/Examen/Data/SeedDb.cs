@@ -1,5 +1,4 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Examen.Data.Entities;
+﻿using Examen.Data.Entities;
 
 namespace Examen.Data
 {
@@ -16,7 +15,7 @@ namespace Examen.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckEntrancesAsync();
-            await CheckTicketsAsync();
+            //await CheckTicketsAsync();
         }
 
         private async Task CheckEntrancesAsync()
@@ -35,19 +34,16 @@ namespace Examen.Data
         {
             if (!_context.Tickets.Any())
             {
+
                 for (int i = 1; i < 5000; i++)
                 {
-                    Ticket ticket = new()
-                    {
-                        Id = i,
-                        WasUsed = false
-                    };
-                    _context.Tickets.Add(ticket);
+                    _context.Tickets.Add(new Ticket { Id = i, WasUsed = false });
                 }
-
                 await _context.SaveChangesAsync();
             }
+
         }
 
+        
     }
 }
