@@ -51,15 +51,14 @@ namespace Examen.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime>("Date")
-                        .HasMaxLength(50)
+                    b.Property<DateTime?>("Date")
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Document")
                         .HasMaxLength(20)
                         .HasColumnType("nvarchar(20)");
 
-                    b.Property<int>("EntranceId")
+                    b.Property<int?>("EntranceId")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
@@ -74,16 +73,19 @@ namespace Examen.Migrations
 
                     b.HasIndex("EntranceId");
 
+                    b.HasIndex("Id")
+                        .IsUnique();
+
                     b.ToTable("Tickets");
                 });
 
             modelBuilder.Entity("Examen.Data.Entities.Ticket", b =>
                 {
-                    b.HasOne("Examen.Data.Entities.Entrance", null)
+                    b.HasOne("Examen.Data.Entities.Entrance", "Entrance")
                         .WithMany("Tickets")
-                        .HasForeignKey("EntranceId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
+                        .HasForeignKey("EntranceId");
+
+                    b.Navigation("Entrance");
                 });
 
             modelBuilder.Entity("Examen.Data.Entities.Entrance", b =>

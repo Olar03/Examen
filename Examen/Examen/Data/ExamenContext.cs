@@ -1,7 +1,6 @@
 ﻿using Examen.Data.Entities;
 using Microsoft.EntityFrameworkCore;
-
-
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Examen.Data
 {
@@ -18,9 +17,16 @@ namespace Examen.Data
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
+
+            
             base.OnModelCreating(modelBuilder);
+            modelBuilder.Entity<Ticket>().HasIndex(t => t.Id).IsUnique();
             modelBuilder.Entity<Entrance>().HasIndex(e => e.Id).IsUnique();
-            modelBuilder.Entity<Entrance>().HasIndex(t => t.Id).IsUnique();
+            
+
+
+            
+
 
         }
 

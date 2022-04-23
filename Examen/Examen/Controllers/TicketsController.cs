@@ -10,22 +10,22 @@ using Examen.Data.Entities;
 
 namespace Examen.Controllers
 {
-    public class EntrancesController : Controller
+    public class TicketsController : Controller
     {
         private readonly ExamenContext _context;
 
-        public EntrancesController(ExamenContext context)
+        public TicketsController(ExamenContext context)
         {
             _context = context;
         }
 
-        // GET: Entrances
+        // GET: Tickets
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Entrances.ToListAsync());
+            return View(await _context.Tickets.ToListAsync());
         }
 
-        // GET: Entrances/Details/5
+        // GET: Tickets/Details/5
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null)
@@ -33,39 +33,39 @@ namespace Examen.Controllers
                 return NotFound();
             }
 
-            var entrance = await _context.Entrances
+            var ticket = await _context.Tickets
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (entrance == null)
+            if (ticket == null)
             {
                 return NotFound();
             }
 
-            return View(entrance);
+            return View(ticket);
         }
 
-        // GET: Entrances/Create
+        // GET: Tickets/Create
         public IActionResult Create()
         {
             return View();
         }
 
-        // POST: Entrances/Create
+        // POST: Tickets/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Id,Description")] Entrance entrance)
+        public async Task<IActionResult> Create([Bind("Id,WasUsed,Document,Name,Date")] Ticket ticket)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(entrance);
+                _context.Add(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
-            return View(entrance);
+            return View(ticket);
         }
 
-        // GET: Entrances/Edit/5
+        // GET: Tickets/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -73,22 +73,22 @@ namespace Examen.Controllers
                 return NotFound();
             }
 
-            var entrance = await _context.Entrances.FindAsync(id);
-            if (entrance == null)
+            var ticket = await _context.Tickets.FindAsync(id);
+            if (ticket == null)
             {
                 return NotFound();
             }
-            return View(entrance);
+            return View(ticket);
         }
 
-        // POST: Entrances/Edit/5
+        // POST: Tickets/Edit/5
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("Id,Description")] Entrance entrance)
+        public async Task<IActionResult> Edit(int id, [Bind("Id,WasUsed,Document,Name,Date")] Ticket ticket)
         {
-            if (id != entrance.Id)
+            if (id != ticket.Id)
             {
                 return NotFound();
             }
@@ -97,12 +97,12 @@ namespace Examen.Controllers
             {
                 try
                 {
-                    _context.Update(entrance);
+                    _context.Update(ticket);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!EntranceExists(entrance.Id))
+                    if (!TicketExists(ticket.Id))
                     {
                         return NotFound();
                     }
@@ -113,10 +113,10 @@ namespace Examen.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            return View(entrance);
+            return View(ticket);
         }
 
-        // GET: Entrances/Delete/5
+        // GET: Tickets/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -124,30 +124,30 @@ namespace Examen.Controllers
                 return NotFound();
             }
 
-            var entrance = await _context.Entrances
+            var ticket = await _context.Tickets
                 .FirstOrDefaultAsync(m => m.Id == id);
-            if (entrance == null)
+            if (ticket == null)
             {
                 return NotFound();
             }
 
-            return View(entrance);
+            return View(ticket);
         }
 
-        // POST: Entrances/Delete/5
+        // POST: Tickets/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var entrance = await _context.Entrances.FindAsync(id);
-            _context.Entrances.Remove(entrance);
+            var ticket = await _context.Tickets.FindAsync(id);
+            _context.Tickets.Remove(ticket);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool EntranceExists(int id)
+        private bool TicketExists(int id)
         {
-            return _context.Entrances.Any(e => e.Id == id);
+            return _context.Tickets.Any(e => e.Id == id);
         }
     }
 }

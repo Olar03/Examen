@@ -15,7 +15,7 @@ namespace Examen.Data
         {
             await _context.Database.EnsureCreatedAsync();
             await CheckEntrancesAsync();
-            //await CheckTicketsAsync();
+            await CheckTicketsAsync();
         }
 
         private async Task CheckEntrancesAsync()
@@ -32,18 +32,30 @@ namespace Examen.Data
 
         private async Task CheckTicketsAsync()
         {
+
             if (!_context.Tickets.Any())
             {
-
-                for (int i = 1; i < 5000; i++)
+                for (int i = 0; i < 5000; i++)
                 {
-                    _context.Tickets.Add(new Ticket { Id = i, WasUsed = false });
+                    _context.Tickets.Add(new Ticket
+                    {
+
+
+                        WasUsed = false,
+                        Document = "",
+                        Name = "",
+
+                        Entrance = new Entrance()
+                        {
+                            Description = ""
+                        }
+                    });
+                    await _context.SaveChangesAsync();
                 }
-                await _context.SaveChangesAsync();
+
             }
 
         }
 
-        
     }
 }
