@@ -1,18 +1,16 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-
-namespace Examen.Data.Entities
+namespace Examen.Models
 {
-    public class Ticket
+    public class EditTicketViewModel
     {
-
         public int Id { get; set; }
-        
+
         [Display(Name = "Usado")]
         public bool WasUsed { get; set; }
 
         [Display(Name = "Documento")]
-        [MaxLength(20, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]       
+        [MaxLength(20, ErrorMessage = "El campo {0} debe tener máximo {1} caractéres.")]
         public string Document { get; set; }
 
         [Display(Name = "Nombre")]
@@ -21,9 +19,6 @@ namespace Examen.Data.Entities
 
         [Display(Name = "Fecha Uso")]
         public DateTime? Date { get; set; }
-
-        [Display(Name = "Entrada")]
-        public Entrance? Entrance { get; set; }
 
     }
 }

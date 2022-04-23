@@ -14,19 +14,16 @@ namespace Examen.Data
 
         public DbSet<Entrance> Entrances { get; set; }
         public DbSet<Ticket> Tickets { get; set; }
+        public DbSet<EntranceTicket> EntranceTickets { get; set; }
+
+        
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
-
-            
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Ticket>().HasIndex(t => t.Id).IsUnique();
             modelBuilder.Entity<Entrance>().HasIndex(e => e.Id).IsUnique();
-            
-
-
-            
-
+            modelBuilder.Entity<Entrance>().HasIndex("EntranceId", "TicketId").IsUnique();
 
         }
 
