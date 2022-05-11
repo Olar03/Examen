@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Examen.Data;
 using Examen.Data.Entities;
-using Shooping.Helpers;
+using Examen.Helpers;
 using Examen.Models;
 
 namespace Examen.Controllers
@@ -96,17 +96,15 @@ namespace Examen.Controllers
         // POST: Tickets/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, Ticket model)
+        public async Task<IActionResult> Edit(int id, EditTicketViewModel model)
         {
+            
             if (id != model.Id)
             {
                 return NotFound();
             }
-
-            if (id != model.Id)
-            {
-                return NotFound();
-            }
+            
+             
 
             try
             {
@@ -115,6 +113,7 @@ namespace Examen.Controllers
                 ticket.Document = model.Document;
                 ticket.Name = model.Name;
                 ticket.Date = model.Date;
+                ticket.Entrance = (Entrance)await _combosHelper.GetComboEntrancesAsync();
                 _context.Update(ticket);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
@@ -171,57 +170,6 @@ namespace Examen.Controllers
         {
             return _context.Tickets.Any(e => e.Id == id);
         }
-
-
-        //public async Task<IActionResult> AddEntrance(int? id)
-        //{
-        //    if (id == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    Ticket ticket = await _context.Tickets.FindAsync(id);
-        //    if (ticket == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    AddEntranceTikectViewModel model = new()
-        //    {
-        //        TicketId = ticket.Id,
-        //        Entrance = await _combosHelper.GetComboEntrancesAsync(),
-        //    };
-
-        //    return View(model);
-        //}
-
-        //[HttpPost]
-        //[ValidateAntiForgeryToken]
-        //public async Task<IActionResult> AddCategory(AddEntranceTikectViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        Ticket ticket = await _context.Tickets.FindAsync(model.TicketId);
-        //        EntranceTickets entranceTickets = new()
-        //        {
-        //            Entrance = await _context.Entrances.FindAsync(model.EntranceId),
-        //            Vehicle = ticket,
-        //        };
-
-        //        try
-        //        {
-        //            _context.Add(vehicleCategory);
-        //            await _context.SaveChangesAsync();
-        //            return RedirectToAction(nameof(Details), new { Id = ticket.Id });
-        //        }
-        //        catch (Exception exception)
-        //        {
-        //            ModelState.AddModelError(string.Empty, exception.Message);
-        //        }
-        //    }
-
-        //    return View(model);
-        //}
 
     }
 }

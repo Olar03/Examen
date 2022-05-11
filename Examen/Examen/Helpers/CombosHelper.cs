@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore;
 using Examen.Data;
 
-namespace Shooping.Helpers
+namespace Examen.Helpers
 {
     public class CombosHelper : ICombosHelper
     {

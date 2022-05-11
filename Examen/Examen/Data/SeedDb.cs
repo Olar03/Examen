@@ -47,7 +47,7 @@ namespace Examen.Data
 
                         Entrance = new Entrance()
                         {
-                            Description = ""
+                            Description = null,
                         }
                     });
                     await _context.SaveChangesAsync();

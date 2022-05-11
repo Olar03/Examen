@@ -1,4 +1,5 @@
 using Examen.Data;
+using Examen.Helpers;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -12,7 +13,7 @@ builder.Services.AddDbContext<ExamenContext>(p =>
 });
 
 builder.Services.AddTransient<SeedDb>();
-//builder.Services.AddScoped<ICombosHelper, CombosHelper>();//Combos
+builder.Services.AddScoped<ICombosHelper, CombosHelper>();//Combos
 builder.Services.AddRazorPages().AddRazorRuntimeCompilation();
 
 var app = builder.Build();
