@@ -18,16 +18,16 @@ namespace RentACar.Controllers
         private readonly ICombosHelper _combosHelper;
         private readonly IBlobHelper _blobHelper;
         private readonly IMailHelper _mailHelper;
-        //private readonly IFlashMessage _flashMessage;
+        private readonly IFlashMessage _flashMessage;
 
-        public AccountController(IUserHelper userHelper, DataContext context, ICombosHelper combosHelper, IBlobHelper blobHelper, IMailHelper mailHelper/*, IFlashMessage flashMessage*/)
+        public AccountController(IUserHelper userHelper, DataContext context, ICombosHelper combosHelper, IBlobHelper blobHelper, IMailHelper mailHelper, IFlashMessage flashMessage)
         {
             _userHelper = userHelper;
             _context = context;
             _combosHelper = combosHelper;
             _blobHelper = blobHelper;
             _mailHelper = mailHelper;
-            //_flashMessage = flashMessage;
+            _flashMessage = flashMessage;
         }
 
 
@@ -209,6 +209,30 @@ namespace RentACar.Controllers
             return View(model);
         }
 
+        /*E-Mail de confirmación registro*/
+        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        {
+            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            {
+                return NotFound();
+            }
+
+            User user = await _userHelper.GetUserAsync(new Guid(userId));
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            IdentityResult result = await _userHelper.ConfirmEmailAsync(user, token);
+            if (!result.Succeeded)
+            {
+                return NotFound();
+            }
+
+            return View();
+        }
+
+        /*Cambiar contraseña*/
         public IActionResult ChangePassword()
         {
             return View();
@@ -247,90 +271,110 @@ namespace RentACar.Controllers
             return View(model);
         }
 
+        /* Recuperar contraseña*/
         public IActionResult RecoverPassword()
         {
             return View();
         }
 
-        //[HttpPost]
-        //public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
-        //{
-        //    if (ModelState.IsValid)
-        //    {
-        //        User user = await _userHelper.GetUserAsync(model.Email);
-        //        if (user == null)
-        //        {
-        //            _flashMessage.Danger("El email no corresponde a ningún usuario registrado.");
-        //            return View(model);
-        //        }
 
-        //        string myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
-        //        string link = Url.Action(
-        //            "ResetPassword",
-        //            "Account",
-        //            new { token = myToken }, protocol: HttpContext.Request.Scheme);
-        //        _mailHelper.SendMail(
-        //            $"{user.FullName}",
-        //            model.Email,
-        //            "Shopping - Recuperación de Contraseña",
-        //            $"<h1>Shopping - Recuperación de Contraseña</h1>" +
-        //            $"Para recuperar la contraseña haga click en el siguiente enlace:" +
-        //            $"<p><a href = \"{link}\">Reset Password</a></p>");
-        //        _flashMessage.Info("Las instrucciones para recuperar la contraseña han sido enviadas a su correo.");
-        //        return RedirectToAction(nameof(Login));
-        //    }
-
-        //    return View(model);
-        //}
-
-        //public IActionResult ResetPassword(string token)
-        //{
-        //    return View();
-        //}
-
-        //[HttpPost]
-        //public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
-        //{
-        //    User user = await _userHelper.GetUserAsync(model.UserName);
-        //    if (user != null)
-        //    {
-        //        IdentityResult result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
-        //        if (result.Succeeded)
-        //        {
-        //            _flashMessage.Info("Contraseña cambiada con éxito.");
-        //            return RedirectToAction(nameof(Login));
-        //        }
-
-        //        _flashMessage.Danger("Error cambiando la contraseña.");
-        //        return View(model);
-        //    }
-
-        //    _flashMessage.Danger("Usuario no encontrado.");
-        //    return View(model);
-        //}
-
-
-        public async Task<IActionResult> ConfirmEmail(string userId, string token)
+        [HttpPost]
+        public async Task<IActionResult> RecoverPassword(RecoverPasswordViewModel model)
         {
-            if (string.IsNullOrEmpty(userId) || string.IsNullOrEmpty(token))
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                User user = await _userHelper.GetUserAsync(model.Email);
+                if (user == null)
+                {
+                    ModelState.AddModelError(string.Empty, "El email no corresponde a ningún usuario registrado.");
+                    return View(model);
+                }
+
+                string myToken = await _userHelper.GeneratePasswordResetTokenAsync(user);
+                string link = Url.Action(
+                    "ResetPassword",
+                    "Account",
+                    new { token = myToken }, protocol: HttpContext.Request.Scheme);
+                _mailHelper.SendMail(
+                    $"{user.FullName}",
+                    model.Email,
+                    "Shopping - Recuperación de Contraseña",
+                    $"<h1>Shopping - Recuperación de Contraseña</h1>" +
+                    $"Para recuperar la contraseña haga click en el siguiente enlace:" +
+                    $"<p><a href = \"{link}\">Reset Password</a></p>");
+                ViewBag.Message = "Las instrucciones para recuperar la contraseña han sido enviadas a su correo.";
+                return View();
             }
 
-            User user = await _userHelper.GetUserAsync(new Guid(userId));
-            if (user == null)
-            {
-                return NotFound();
-            }
+            return View(model);
+        }
 
-            IdentityResult result = await _userHelper.ConfirmEmailAsync(user, token);
-            if (!result.Succeeded)
-            {
-                return NotFound();
-            }
-
+        public IActionResult ResetPassword(string token)
+        {
             return View();
         }
+
+        [HttpPost]
+        public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
+        {
+            User user = await _userHelper.GetUserAsync(model.UserName);
+            if (user != null)
+            {
+                IdentityResult result = await _userHelper.ResetPasswordAsync(user, model.Token, model.Password);
+                if (result.Succeeded)
+                {
+                    ViewBag.Message = "Contraseña cambiada con éxito.";
+                    return View();
+                }
+
+                ViewBag.Message = "Error cambiando la contraseña.";
+                return View(model);
+            }
+
+            ViewBag.Message = "Usuario no encontrado.";
+            return View(model);
+        }
+
+
+        /*Renvio Confirmación de E-mail*/
+        public IActionResult ResendToken()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ResendToken(ResendTokenViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                User user = await _userHelper.GetUserAsync(model.Username);
+                string myToken = await _userHelper.GenerateEmailConfirmationTokenAsync(user);
+                string tokenLink = Url.Action("ConfirmEmail", "Account", new
+                {
+                    userid = user.Id,
+                    token = myToken
+                }, protocol: HttpContext.Request.Scheme);
+
+                Response response = _mailHelper.SendMail(
+                    $"{model.FirstName} {model.LastName}",
+                    model.Username,
+                    "Shopping - Confirmación de Email",
+                    $"<h1>Shopping - Confirmación de Email</h1>" +
+                        $"Para habilitar el usuario por favor hacer click en el siguiente link:, " +
+                        $"<p><a href = \"{tokenLink}\">Confirmar Email</a></p>");
+                if (response.IsSuccess)
+                {
+                    _flashMessage.Info("Email Re-Envíado. Para poder ingresar al sistema, siga las instrucciones que han sido enviadas a su correo.");
+                    return RedirectToAction(nameof(Login));
+                }
+
+                _flashMessage.Danger(response.Message);
+            }
+            return View(model);
+        }
+
+
 
     }
 }

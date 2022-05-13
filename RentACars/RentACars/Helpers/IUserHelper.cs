@@ -38,10 +38,12 @@ namespace RentACars.Helpers
 
         /* finish Metodos confirmación de E-mail*/
 
-        //    Task<string> GeneratePasswordResetTokenAsync(User user);
+        /*Metodos recuperar contraseña*/
+        Task<string> GeneratePasswordResetTokenAsync(User user);
 
-        //    Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
+        Task<IdentityResult> ResetPasswordAsync(User user, string token, string password);
 
+        /* finish Metodos recuperar contraseña*/
     }
 
 }

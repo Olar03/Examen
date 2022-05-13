@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using RentACars.Data;
 using RentACars.Data.Entities;
 using RentACars.Helpers;
+using Vereyon.Web;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -21,6 +22,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddTransient<SeedDb>();
+builder.Services.AddFlashMessage();
 builder.Services.AddScoped<ICombosHelper, CombosHelper>();
 builder.Services.AddScoped<IBlobHelper, BlobHelper>();
 builder.Services.AddScoped<IUserHelper, UserHelper>();
@@ -58,9 +60,6 @@ void SeedData()
         service.SeedAsync().Wait();
     }
 }
-
-
-
 
 
 if (!app.Environment.IsDevelopment())

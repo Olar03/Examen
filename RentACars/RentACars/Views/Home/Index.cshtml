@@ -31,7 +31,7 @@
             <div class="col">
                 <div class="card h-100">
                     <div class="text-center zoom">
-                        <img src="@item.ImageFullPath" style="height:150px; max-width:200px;" class="text-center" alt=@item.Plaque />
+                        <img src="@item.ImageFullPath" style="height:150px; max-width:200px; border-radius:50%;" class="text-center" alt=@item.Plaque />
                     </div>
                     <div class="card-body">
                         <h5 class="card-title text-navy"> @item.Serie</h5>
@@ -39,8 +39,8 @@
                         <h5 class="text-navy ">@Html.DisplayFor(modelItem => item.Plaque)</h5>
                     </div>
                     <div class="card-footer text-center">
-                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary">Detalles</a>
-                        <a asp-action="Add" asp-route-id="@item.Id" class="btn btn-sm btn-primary">Reservar</a>
+                        <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-sm btn-secondary"><i class="fa-solid fa-circle-info"></i> Ver</a>
+                        <a asp-action="Add" asp-route-id="@item.Id" class="btn btn-sm btn-primary"><i class="fa-solid fa-car-side"></i>Reservar</a>
                     </div>
                 </div>
             </div>
